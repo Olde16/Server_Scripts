@@ -137,3 +137,75 @@ Client / Website
 
 This stack was chosen to keep the project relatively simple.
 The Go backend runs as a standalone compiled application, so no separate PHP runtime or traditional web server is required for the API itself.
+
+# Database Creation
+
+```sql
+CREATE DATABASE olympics;
+
+USE olympics;
+
+
+CREATE TABLE country (
+    land_id SMALLINT UNSIGNED NOT NULL,
+    land_code VARCHAR(2) NOT NULL,
+    land_name VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (land_id),
+    UNIQUE (land_name)
+);
+
+
+CREATE TABLE athletes (
+    athleten_id INT UNSIGNED NOT NULL,
+    athleten_vorname VARCHAR(255) NOT NULL,
+    athleten_name VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (athleten_id)
+);
+
+
+CREATE TABLE medals (
+    medaillen_id SMALLINT UNSIGNED NOT NULL,
+    art_medaille VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (medaillen_id)
+);
+
+
+CREATE TABLE sports (
+    sportart_id INT UNSIGNED NOT NULL,
+    sportart VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (sportart_id),
+    UNIQUE (sportart)
+);
+
+
+CREATE TABLE medals_athletes_sports (
+    land_id SMALLINT UNSIGNED NOT NULL,
+    athleten_id INT UNSIGNED NOT NULL,
+    medaillen_id SMALLINT UNSIGNED NOT NULL,
+    sportart_id INT UNSIGNED NOT NULL,
+    anzahl_medaillen INT UNSIGNED NOT NULL DEFAULT 0,
+
+    PRIMARY KEY (
+        land_id,
+        athleten_id,
+        medaillen_id,
+        sportart_id
+    ),
+
+    FOREIGN KEY (land_id)
+        REFERENCES country(land_id),
+
+    FOREIGN KEY (athleten_id)
+        REFERENCES athletes(athleten_id),
+
+    FOREIGN KEY (medaillen_id)
+        REFERENCES medals(medaillen_id),
+
+    FOREIGN KEY (sportart_id)
+        REFERENCES sports(sportart_id)
+);
+```
