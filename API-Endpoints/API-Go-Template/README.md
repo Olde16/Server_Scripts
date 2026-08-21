@@ -148,38 +148,47 @@ USE olympics;
 
 CREATE TABLE country (
     land_id SMALLINT UNSIGNED NOT NULL,
-    land_code VARCHAR(2) NOT NULL,
-    land_name VARCHAR(255) NOT NULL,
+    land_code CHAR(2) NOT NULL,
+    land_name VARCHAR(100) NOT NULL,
 
     PRIMARY KEY (land_id),
-    UNIQUE (land_name)
-);
+    UNIQUE KEY land_code (land_code),
+    UNIQUE KEY land_name (land_name)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE athletes (
-    athleten_id INT UNSIGNED NOT NULL,
-    athleten_vorname VARCHAR(255) NOT NULL,
-    athleten_name VARCHAR(255) NOT NULL,
+    athleten_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    athleten_vorname VARCHAR(100) NOT NULL,
+    athleten_name VARCHAR(100) NOT NULL,
 
     PRIMARY KEY (athleten_id)
-);
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE medals (
-    medaillen_id SMALLINT UNSIGNED NOT NULL,
-    art_medaille VARCHAR(255) NOT NULL,
+    medaillen_id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    art_medaille VARCHAR(50) NOT NULL,
 
     PRIMARY KEY (medaillen_id)
-);
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE sports (
-    sportart_id INT UNSIGNED NOT NULL,
-    sportart VARCHAR(255) NOT NULL,
+    sportart_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    sportart VARCHAR(100) NOT NULL,
 
     PRIMARY KEY (sportart_id),
-    UNIQUE (sportart)
-);
+    UNIQUE KEY unique_sportart (sportart)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE medals_athletes_sports (
@@ -196,16 +205,28 @@ CREATE TABLE medals_athletes_sports (
         sportart_id
     ),
 
-    FOREIGN KEY (land_id)
-        REFERENCES country(land_id),
+    KEY athleten_id (athleten_id),
+    KEY medaillen_id (medaillen_id),
+    KEY sportart_id (sportart_id),
 
-    FOREIGN KEY (athleten_id)
-        REFERENCES athletes(athleten_id),
+    CONSTRAINT medals_athletes_sports_ibfk_1
+        FOREIGN KEY (land_id)
+        REFERENCES country (land_id)
+        ON DELETE CASCADE,
 
-    FOREIGN KEY (medaillen_id)
-        REFERENCES medals(medaillen_id),
+    CONSTRAINT medals_athletes_sports_ibfk_2
+        FOREIGN KEY (athleten_id)
+        REFERENCES athletes (athleten_id)
+        ON DELETE CASCADE,
 
-    FOREIGN KEY (sportart_id)
-        REFERENCES sports(sportart_id)
-);
+    CONSTRAINT medals_athletes_sports_ibfk_3
+        FOREIGN KEY (medaillen_id)
+        REFERENCES medals (medaillen_id),
+
+    CONSTRAINT medals_athletes_sports_ibfk_4
+        FOREIGN KEY (sportart_id)
+        REFERENCES sports (sportart_id)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_0900_ai_ci;
 ```
